@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 
 
-engine = create_engine("DB_LOCATION", echo=True) # TODO fill with params
+engine = create_engine("sqlite:///events.db", echo=True) # TODO fill with params
 Base = declarative_base()
 
 room_member_association = Table(
@@ -26,7 +26,7 @@ class Rooms(Base):
     pinned_message_id = Column(Integer, ForeignKey('messages.Id'))
 
 
-class Conversation(Base):
+class Conversations(Base):
     __tablename__ = "conversations"
     Id = Column(Integer, primary_key=True)
     start_timestamp = Column(DateTime, nullable=False)
@@ -69,10 +69,10 @@ class Messages(Base):
 
 
 class ForwardedMessages(Base):
-    __tablename_ = "forwardedmessages"
+    __tablename__ = "forwardedmessages"
     Id = Column(Integer, primary_key=True)
 
-    conversation_id = Column(Integer, ForeignKey('conversations.id'))
+    conversation_id = Column(Integer, ForeignKey('conversations.Id'))
     origin_id = Column(Integer, ForeignKey('messages.Id'))
     forward_id = Column(Integer, ForeignKey('messages.Id'))
 
