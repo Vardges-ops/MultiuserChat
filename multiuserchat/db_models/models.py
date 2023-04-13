@@ -1,16 +1,14 @@
 from sqlalchemy import (
     Column, Integer, String, ForeignKey,
-    Boolean, DateTime, Table, create_engine
+    Boolean, DateTime, Table
 )
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 
+from multiuserchat.db_models import Base
 
-engine = create_engine("sqlite:///events.db", echo=True) # TODO fill with params
-Base = declarative_base()
 
-room_member_association = Table(
+RoomMembers = Table(
     'roommembers',
     Base.metadata,
     Column('room_id', Integer, ForeignKey('rooms.Id')),
@@ -43,7 +41,7 @@ class Reactions(Base):
     content = Column(String, nullable=False)
 
 
-class User(Base):
+class Users(Base):
     __tablename__ = "users"
     Id = Column(Integer, primary_key=True)
     first_name = Column(String, nullable=False)
@@ -54,7 +52,7 @@ class User(Base):
     last_seen = Column(DateTime)
     status = Column(String, nullable=False)
 
-    rooms = relationship('Rooms', secondary=room_member_association)
+    rooms = relationship('Rooms', secondary=RoomMembers)
 
 
 class Messages(Base):
@@ -83,7 +81,3 @@ class MessageReaction(Base):
     message_id = Column(Integer, ForeignKey('messages.Id'))
     user_id = Column(Integer, ForeignKey('users.Id'))
     reaction_id = Column(Integer, ForeignKey('reactions.Id'))
-
-
-def create_db():
-    Base.metadata.create_all(engine)
