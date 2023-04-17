@@ -1,5 +1,5 @@
 from multiuserchat.db_models import engine
-from multiuserchat.db_models.models import Rooms, Conversations, RoomMembers, Users
+from multiuserchat.db_models.models import Users
 from sqlalchemy.orm import Session
 
 
@@ -11,40 +11,61 @@ class UserNotFoundException(Exception):
     """Raise when user with given id doesn't exist"""
 
 
-# TODO create middleware like object to check if passed external arguments are correct (Pydantic)
-
-
 class UserCRUD:
 
     @staticmethod
     def create_user(**kwargs) -> Users:
+        """
+        User creation function
+        :param kwargs: user object params
+        :return: created user object
+        """
         user_obj = Users(**kwargs)
         with Session(bind=engine) as session:
             session.add(user_obj)
-        print(f"Created user object with params: {kwargs}")  # TODO replace with logs
+            session.commit()
+        print(f"Created user object with params: {kwargs}")
         return user_obj
 
     @staticmethod
     def give_user_by(**kwargs) -> Users:
+        """
+        Return user object by keyword
+        :param kwargs:
+        :return: user object
+        """
         with Session(bind=engine) as session:
             user_obj = session.query(Users).filter(**kwargs).one()
             return user_obj
 
     @staticmethod
-    def alter_user(id_=None, **kwargs):
+    def alter_user(id_=None, **kwargs) -> bool:
+        """
+        Change user with given id
+        :param id_: user object id
+        :param kwargs: new params
+        :return: None if id_ doesn't exist
+        """
         if id_ is None:
             return False
         else:
             with Session(bind=engine) as session:
                 user_obj = session.query(Users).filter(Id=id_).one()
                 user_obj.update(kwargs)
+                session.commit()
             print(f"Set new values with {kwargs} of user with id {id_}")
 
     @staticmethod
     def delete_user(id_=None):
+        """
+        Delete User with given id parameter
+        :param id_: under delete user's id
+        :return:
+        """
         with Session(bind=engine) as session:
             user_obj = session.query(Users).filter(Id=id_).one()
             user_obj.delete()  # TODO add cascade delete
+            session.commit()
             print(f"Successfully deleted User with params {user_obj}")
 
 
@@ -54,7 +75,7 @@ class UserInteractions(UserCRUD):
         usr = super(UserCRUD).give_user_by(**kwargs)
         return usr is None
 
-    def create_insert_user(self, **kwargs): # TODO think if created object ID is needed or not
+    def create_insert_user(self, **kwargs):
         """
         This function checks if user with given email exists and if not,
         then creates it
