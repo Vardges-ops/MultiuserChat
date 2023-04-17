@@ -48,7 +48,7 @@ class Users(Base):
     last_name = Column(String, nullable=False)
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
-    profile_pic = Column(String, nullable=False)
+    picture_link = Column(String, nullable=False)
     last_seen = Column(DateTime)
     status = Column(String, nullable=False)
 
