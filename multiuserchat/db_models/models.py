@@ -40,6 +40,8 @@ class Reactions(Base):
     Id = Column(Integer, primary_key=True)
     content = Column(String, nullable=False)
 
+    creators = relationship("MessageReactions", back_populates="creator")
+
 
 class Users(Base):
     __tablename__ = "users"
@@ -75,9 +77,11 @@ class ForwardedMessages(Base):
     forward_id = Column(Integer, ForeignKey('messages.Id'))
 
 
-class MessageReaction(Base):
+class MessageReactions(Base):
     __tablename__ = 'messagereactions'
     Id = Column(Integer, primary_key=True)
     message_id = Column(Integer, ForeignKey('messages.Id'))
     user_id = Column(Integer, ForeignKey('users.Id'))
     reaction_id = Column(Integer, ForeignKey('reactions.Id'))
+
+    reaction = relationship("Reactions", back_populates="creators")
