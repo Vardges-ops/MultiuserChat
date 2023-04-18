@@ -72,6 +72,11 @@ class UserCRUD:
 class UserInteractions(UserCRUD):
 
     def check_user_with(self, **kwargs):
+        """
+        This function accepts keyword arguments and returns true if user exists
+        :param kwargs:
+        :return: True if user exists, else false
+        """
         usr = super(UserCRUD).give_user_by(**kwargs)
         return usr is None
 
@@ -80,7 +85,7 @@ class UserInteractions(UserCRUD):
         This function checks if user with given email exists and if not,
         then creates it
         :param kwargs:
-        :return:
+        :return: created user id
         """
         usr_email = kwargs.get('email')
         if self.check_user_with(email=usr_email):
@@ -89,6 +94,11 @@ class UserInteractions(UserCRUD):
         return user_obj.Id
 
     def delete_user_with_params(self, **kwargs):
+        """
+        This function receives keyword arguments and deletes user with given params
+        :param kwargs:
+        :return:
+        """
         usr_obj = super().give_user_by(**kwargs)
         if usr_obj is not None:
             super().delete_user(id_=usr_obj.Id)
@@ -96,7 +106,19 @@ class UserInteractions(UserCRUD):
             raise UserNotFoundException(f"User not found with params {kwargs}")
 
     def alter_user_with_id(self, user_id, **kwargs):
+        """
+        This function takes user id which should be changed and new keyword argument
+        :param user_id: user's id which params should be updated
+        :param kwargs:
+        :return:
+        """
         super().alter_user(id_=user_id, **kwargs)
 
     def alter_user_with_email(self, user_email, **kwargs):
+        """
+        This function takes user email which should be changed and new keyword argument
+        :param user_email:
+        :param kwargs:
+        :return:
+        """
         super().give_user_by(id_=user_email, **kwargs)
