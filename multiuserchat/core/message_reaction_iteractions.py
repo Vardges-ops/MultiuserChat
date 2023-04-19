@@ -1,5 +1,7 @@
+from typing import Optional, List
+
 from multiuserchat.db_models import engine
-from multiuserchat.db_models.models import Reactions
+from multiuserchat.db_models.models import Reactions, MessageReactions
 from sqlalchemy.orm import Session
 
 
@@ -28,20 +30,42 @@ class ReactionInterface:
 class MessageReactionInterface:
 
     @staticmethod
-    def new_message_reaction(**kwargs):
-        msg_id = kwargs.get('message_id')
-        user_id = kwargs.get('user_id')
-        reaction_id = kwargs.get('reaction_id')
-        # TODO implement the else
+    def new_message_reaction(message_id: int, user_id: int, reaction_id: int):
+        """
+        This function takes message id, user id and reaction id,
+        checks if there is no object, then creates it
+        else updates the reaction id with found object
+        :param message_id: new or existing MessageReactions object's message id
+        :param user_id: new or existing MessageReactions object's user id
+        :param reaction_id: MessageReactions object's new reaction id
+        :return:
+        """
+        msg_react_obj = MessageReactionInterface.get_user_reaction_message(message_id, user_id)
+        with Session(bind=engine) as session:
+            if msg_react_obj is None:
+                session.add(MessageReactions(message_id=message_id, user_id=user_id, reaction_id=reaction_id))
+            else:
+                msg_react_obj.update({'reaction_id': reaction_id})
 
     @staticmethod
-    def get_user_reaction_message():
-        pass
+    def get_user_reaction_message(msg_id: int, user_id: int) -> Optional[MessageReactions]:
+        """
+        This function returns user message reactions if exists else None is returned
+        :param msg_id: message id for filtering
+        :param user_id: reaction id for filtering
+        :return: filtered MessageReactions object or None
+        """
+        with Session(bind=engine) as session:
+            react_usr_obj = session.query(MessageReactions).filter(message_id=msg_id, user_id=user_id).one_or_none()
+        return react_usr_obj
 
     @staticmethod
-    def replace_with_new_user_reaction():
-        pass
-
-    @staticmethod
-    def get_custom_message_reactions():
-        pass
+    def get_custom_message_reactions(message_id: int) -> List[MessageReactions]:
+        """
+        This method returns all user's reactions for given message id
+        :param message_id: message id which should be checked for users reactions
+        :return: List of MessageReactions object for message id, if found
+        """
+        with Session(bind=engine) as session:
+            message_reactions = session.query(MessageReactions).filter(message_id=message_id).all()
+        return message_reactions
