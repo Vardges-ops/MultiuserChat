@@ -28,7 +28,7 @@ class Conversations(Base):
     __tablename__ = "conversations"
     Id = Column(Integer, primary_key=True)
     start_timestamp = Column(DateTime, nullable=False)
-    end_timestamp = Column(DateTime, nullable=False)
+    end_timestamp = Column(DateTime, nullable=True)
 
     room_id = Column(Integer, ForeignKey('rooms.Id'))
     room = relationship('Rooms')
