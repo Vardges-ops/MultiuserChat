@@ -2,6 +2,7 @@ from multiuserchat.db_models import create_db
 import user_iteractions, message_reaction_iteractions
 from user_iteractions import UserCRUD
 from message_reaction_iteractions import MessageReactionInterface, ReactionInterface
+from room_iteractions import RoomsInterface
 from datetime import datetime
 
 create_db()
@@ -15,6 +16,12 @@ if __name__ == "__main__":
     UserCRUD.update_user_email(id_=1, new_email='newemail@mail.com')
     ReactionInterface.add_new_reaction(content='reaction_ref1')
     ReactionInterface.add_new_reaction(content='reaction_ref2')
+    RoomsInterface.create_room(type_name='Group', name='Test group room')
+    RoomsInterface.create_room(type_name='Direct', name='Test direct room')
+    RoomsInterface.get_room_by_id(2)
+    RoomsInterface.add_pinned_message(1, 2)
+
+
     MessageReactionInterface.new_message_reaction(1, 1, 1)  # TODO this function should be tested with message interface
     MessageReactionInterface.get_user_reaction_message(1, 1)  # TODO this function should be tested with message interface
     MessageReactionInterface.get_custom_message_reactions(1)  # TODO this function should be tested with message interface
