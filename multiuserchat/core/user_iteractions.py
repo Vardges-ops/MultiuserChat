@@ -28,32 +28,53 @@ class UserCRUD:
         return user_obj
 
     @staticmethod
-    def give_user_by(**kwargs) -> Users:
+    def give_user_by_id(obj_id: int) -> Users:
         """
-        Return user object by keyword
-        :param kwargs:
+        Return user object by Id
+        :Id: Filtered Users object id_ parameter
         :return: user object
         """
         with Session(bind=engine) as session:
-            user_obj = session.query(Users).filter(**kwargs).one()
+            user_obj = session.query(Users).filter(Users.Id == obj_id).one_or_none()
             return user_obj
 
     @staticmethod
-    def alter_user(id_=None, **kwargs) -> bool:
+    def give_user_by_email(email: str) -> Users:
+        """
+        Return user object by Id
+        :email: Filtered Users object email parameter
+        :return: user object
+        """
+        with Session(bind=engine) as session:
+            user_obj = session.query(Users).filter(Users.email == email).one_or_none()
+            return user_obj
+
+    @staticmethod
+    def give_user_by_name(first_name: str) -> Users:
+        """
+        Return user object by keyword
+        :first_name: Filtered Users object first_name parameter
+        :return: user object
+        """
+        with Session(bind=engine) as session:
+            user_obj = session.query(Users).filter(Users.first_name == first_name).all()
+            return user_obj
+
+    @staticmethod
+    def update_user_email(id_, new_email) -> bool:
         """
         Change user with given id
         :param id_: user object id
-        :param kwargs: new params
+        :param new_email: user object new email
         :return: None if id_ doesn't exist
         """
         if id_ is None:
             return False
         else:
             with Session(bind=engine) as session:
-                user_obj = session.query(Users).filter(Id=id_).one()
-                user_obj.update(kwargs)
+                session.query(Users).filter(Users.Id == id_).update({Users.email: new_email})
                 session.commit()
-            print(f"Set new values with {kwargs} of user with id {id_}")
+            print(f"Set new email with {new_email} for user with id {id_}")
 
     @staticmethod
     def delete_user(id_=None):
@@ -63,7 +84,7 @@ class UserCRUD:
         :return:
         """
         with Session(bind=engine) as session:
-            user_obj = session.query(Users).filter(Id=id_).one()
+            user_obj = session.query(Users).filter(Users.Id == id_).one()
             user_obj.delete()  # TODO add cascade delete
             session.commit()
             print(f"Successfully deleted User with params {user_obj}")
@@ -92,33 +113,3 @@ class UserInteractions(UserCRUD):
             raise UserExistsException(f"User with email {usr_email} already exists !")
         user_obj = super(UserCRUD).create_user(**kwargs)
         return user_obj.Id
-
-    def delete_user_with_params(self, **kwargs):
-        """
-        This function receives keyword arguments and deletes user with given params
-        :param kwargs:
-        :return:
-        """
-        usr_obj = super().give_user_by(**kwargs)
-        if usr_obj is not None:
-            super().delete_user(id_=usr_obj.Id)
-        else:
-            raise UserNotFoundException(f"User not found with params {kwargs}")
-
-    def alter_user_with_id(self, user_id, **kwargs):
-        """
-        This function takes user id which should be changed and new keyword argument
-        :param user_id: user's id which params should be updated
-        :param kwargs:
-        :return:
-        """
-        super().alter_user(id_=user_id, **kwargs)
-
-    def alter_user_with_email(self, user_email, **kwargs):
-        """
-        This function takes user email which should be changed and new keyword argument
-        :param user_email:
-        :param kwargs:
-        :return:
-        """
-        super().give_user_by(id_=user_email, **kwargs)

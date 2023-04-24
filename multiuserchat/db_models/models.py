@@ -40,19 +40,21 @@ class Reactions(Base):
     Id = Column(Integer, primary_key=True)
     content = Column(String, nullable=False)
 
+    _creators = relationship("MessageReactions", backref="creator")
+
 
 class Users(Base):
     __tablename__ = "users"
     Id = Column(Integer, primary_key=True)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
-    email = Column(String, nullable=False)
+    email = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
     picture_link = Column(String, nullable=False)
     last_seen = Column(DateTime)
     status = Column(String, nullable=False)
 
-    rooms = relationship('Rooms', secondary=RoomMembers)
+    # rooms = relationship('Rooms', secondary=RoomMembers) # TODO uncomment when implemented Room interface
 
 
 class Messages(Base):
@@ -75,9 +77,11 @@ class ForwardedMessages(Base):
     forward_id = Column(Integer, ForeignKey('messages.Id'))
 
 
-class MessageReaction(Base):
+class MessageReactions(Base):
     __tablename__ = 'messagereactions'
     Id = Column(Integer, primary_key=True)
     message_id = Column(Integer, ForeignKey('messages.Id'))
     user_id = Column(Integer, ForeignKey('users.Id'))
     reaction_id = Column(Integer, ForeignKey('reactions.Id'))
+
+    reaction = relationship("Reactions", backref="creators")
