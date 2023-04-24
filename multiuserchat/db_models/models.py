@@ -40,7 +40,7 @@ class Reactions(Base):
     Id = Column(Integer, primary_key=True)
     content = Column(String, nullable=False)
 
-    creators = relationship("MessageReactions", back_populates="creator")
+    _creators = relationship("MessageReactions", backref="creator")
 
 
 class Users(Base):
@@ -48,13 +48,13 @@ class Users(Base):
     Id = Column(Integer, primary_key=True)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
-    email = Column(String, nullable=False)
+    email = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
     picture_link = Column(String, nullable=False)
     last_seen = Column(DateTime)
     status = Column(String, nullable=False)
 
-    rooms = relationship('Rooms', secondary=RoomMembers)
+    # rooms = relationship('Rooms', secondary=RoomMembers) # TODO uncomment when implemented Room interface
 
 
 class Messages(Base):
@@ -84,4 +84,4 @@ class MessageReactions(Base):
     user_id = Column(Integer, ForeignKey('users.Id'))
     reaction_id = Column(Integer, ForeignKey('reactions.Id'))
 
-    reaction = relationship("Reactions", back_populates="creators")
+    reaction = relationship("Reactions", backref="creators")
