@@ -40,7 +40,7 @@ class MessageReactionInterface:
         with Session(bind=engine) as session:
             react_usr_obj = session.query(MessageReactions).filter(
                 MessageReactions.message_id == msg_id,
-                Users.user_id == user_id
+                Users.Id == user_id
             ).one_or_none()
         return react_usr_obj
 

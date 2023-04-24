@@ -3,6 +3,7 @@ import user_iteractions, message_reaction_iteractions
 from user_iteractions import UserCRUD
 from message_reaction_iteractions import MessageReactionInterface, ReactionInterface
 from room_iteractions import RoomsInterface
+from conversation_iteractions import ConversationsInterface
 from datetime import datetime
 
 create_db()
@@ -20,7 +21,9 @@ if __name__ == "__main__":
     RoomsInterface.create_room(type_name='Direct', name='Test direct room')
     RoomsInterface.get_room_by_id(2)
     RoomsInterface.add_pinned_message(1, 2)
-
+    ConversationsInterface.create_conversation(start_timestamp=datetime.now(), end_timestamp=None, room_id=1)
+    ConversationsInterface.create_conversation(start_timestamp=datetime.now(), end_timestamp=None, room_id=2)
+    ConversationsInterface.end_conversation(conv_id=1)
 
     MessageReactionInterface.new_message_reaction(1, 1, 1)  # TODO this function should be tested with message interface
     MessageReactionInterface.get_user_reaction_message(1, 1)  # TODO this function should be tested with message interface
