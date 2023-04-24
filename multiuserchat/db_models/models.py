@@ -21,7 +21,7 @@ class Rooms(Base):
     Id = Column(Integer, primary_key=True)
     type_name = Column(String, nullable=False)
     name = Column(String, nullable=False)
-    pinned_message_id = Column(Integer, ForeignKey('messages.Id'))
+    pinned_message_id = Column(Integer, ForeignKey('messages.Id'), nullable=True)
 
 
 class Conversations(Base):
