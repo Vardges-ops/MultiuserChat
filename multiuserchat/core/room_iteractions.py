@@ -24,3 +24,7 @@ class RoomsInterface:
         with Session(bind=engine) as session:
             session.query(Rooms).filter(Rooms.Id == room_id).update({'pinned_message_id': pin_msg_id})
             session.commit()
+
+    @staticmethod
+    def delete_room(room_id):
+        pass # TODO this function should delete room object with it's all related objects
