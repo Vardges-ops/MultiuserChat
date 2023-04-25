@@ -23,6 +23,8 @@ class Rooms(Base):
     name = Column(String, nullable=False)
     pinned_message_id = Column(Integer, ForeignKey('messages.Id'), nullable=True)
 
+    # users = relationship("Users", secondary=RoomMembers)
+
 
 class Conversations(Base):
     __tablename__ = "conversations"
