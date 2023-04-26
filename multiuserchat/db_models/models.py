@@ -73,6 +73,7 @@ class Messages(Base):
 class ForwardedMessages(Base):
     __tablename__ = "forwardedmessages"
     Id = Column(Integer, primary_key=True)
+    timestamp = Column(DateTime, default=func.now())
 
     conversation_id = Column(Integer, ForeignKey('conversations.Id'))
     origin_id = Column(Integer, ForeignKey('messages.Id'))
