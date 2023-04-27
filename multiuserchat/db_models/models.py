@@ -64,6 +64,7 @@ class Messages(Base):
     Id = Column(Integer, primary_key=True)
     text_content = Column(String)
     is_sent = Column(Boolean)
+    is_edited = Column(Boolean, default=False)
     timestamp = Column(DateTime, default=func.now())
 
     author_id = Column(Integer, ForeignKey('users.Id'))
