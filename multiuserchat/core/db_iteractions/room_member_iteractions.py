@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_
 
 
-class RoomsInterface:
+class RoomMemberInterface:
 
     @staticmethod
     def get_room_members(room_id: int) -> List[int]:
