@@ -5,7 +5,7 @@ from multiuserchat.db_models.models import Messages
 from sqlalchemy.orm import Session
 
 
-class ConversationsInterface:
+class MessageInterface:
 
     @staticmethod
     def create_message(**kwargs):

@@ -28,7 +28,7 @@ class UserCRUD:
         return user_obj
 
     @staticmethod
-    def give_user_by_id(obj_id: int) -> Users:
+    def get_user_by_id(obj_id: int) -> Users:
         """
         Return user object by Id
         :Id: Filtered Users object id_ parameter
@@ -39,7 +39,7 @@ class UserCRUD:
             return user_obj
 
     @staticmethod
-    def give_user_by_email(email: str) -> Users:
+    def get_user_by_email(email: str) -> Users:
         """
         Return user object by Id
         :email: Filtered Users object email parameter
@@ -50,7 +50,7 @@ class UserCRUD:
             return user_obj
 
     @staticmethod
-    def give_user_by_name(first_name: str) -> Users:
+    def get_user_by_name(first_name: str) -> Users:
         """
         Return user object by keyword
         :first_name: Filtered Users object first_name parameter
@@ -92,16 +92,8 @@ class UserCRUD:
 
 class UserInteractions(UserCRUD):
 
-    def check_user_with(self, **kwargs):
-        """
-        This function accepts keyword arguments and returns true if user exists
-        :param kwargs:
-        :return: True if user exists, else false
-        """
-        usr = super(UserCRUD).give_user_by(**kwargs)
-        return usr is None
-
-    def create_insert_user(self, **kwargs):
+    @staticmethod
+    def create_insert_user(**kwargs):
         """
         This function checks if user with given email exists and if not,
         then creates it
@@ -109,7 +101,7 @@ class UserInteractions(UserCRUD):
         :return: created user id
         """
         usr_email = kwargs.get('email')
-        if self.check_user_with(email=usr_email):
+        if UserCRUD.get_user_by_email(email=usr_email):
             raise UserExistsException(f"User with email {usr_email} already exists !")
         user_obj = super(UserCRUD).create_user(**kwargs)
         return user_obj.Id

@@ -54,7 +54,7 @@ class Users(Base):
     password = Column(String, nullable=False)
     picture_link = Column(String, nullable=False)
     last_seen = Column(DateTime)
-    status = Column(String, nullable=False)
+    status = Column(String)
 
     # rooms = relationship('Rooms', secondary=RoomMembers) # TODO uncomment when implemented Room interface
 

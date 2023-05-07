@@ -5,7 +5,7 @@ from multiuserchat.db_models.models import ForwardedMessages
 from sqlalchemy.orm import Session
 
 
-class RoomsInterface:  # TODO If the message is deleted, then its row should be deleted from this table
+class ForwardedMessageInterface:  # TODO If the message is deleted, then its row should be deleted from this table
 
     @staticmethod
     def get_conv_forwarded_all_msg(conv_id: int) -> List:  # TODO whether this method should return tuple of (forward, origin) msg ids or Session method
