@@ -20,10 +20,10 @@ class Rooms(Base):
     __tablename__ = "rooms"
     Id = Column(Integer, primary_key=True)
     type_name = Column(String, nullable=False)
-    name = Column(String, nullable=False)
+    name = Column(String)
     pinned_message_id = Column(Integer, ForeignKey('messages.Id'), nullable=True)
 
-    # users = relationship("Users", secondary=RoomMembers)
+    members = relationship("Users", secondary=RoomMembers, backref='members')
 
 
 class Conversations(Base):
@@ -56,7 +56,7 @@ class Users(Base):
     last_seen = Column(DateTime)
     status = Column(String)
 
-    # rooms = relationship('Rooms', secondary=RoomMembers) # TODO uncomment when implemented Room interface
+    rooms = relationship('Rooms', secondary=RoomMembers)
 
 
 class Messages(Base):
