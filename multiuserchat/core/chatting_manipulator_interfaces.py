@@ -51,7 +51,7 @@ class SystemMessageCreator:
 class SystemMessageActions:
 
     def flush_message_to_chat(self, message):
-        pass # Send message to chat
+        pass  # Send message to chat
 
 
 class ChatStreams:
@@ -59,9 +59,13 @@ class ChatStreams:
     def __init__(self, user_id):
         self.user_id = user_id
 
-    def create_direct_chat(self, member_id):
-        # TODO add system user to the chat as well
-        pass
+    def create_direct_chat(self, member_id): # TODO change session usage type
+        room_id = RoomsInterface.create_room(
+            type_name=RoomsInterface.ROOM_TYPES, name=None, pinned_message_id=None
+        )
+        room = RoomsInterface.get_room_by_id(room_id=room_id)
+        user = UserInteractions.get_user_by_id(member_id)
+        room.users.add(user)
 
     def create_group_chat(self, *members_id):
         # TODO add system user to the chat as well

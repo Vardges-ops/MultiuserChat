@@ -5,13 +5,16 @@ from sqlalchemy.orm import Session
 
 class RoomsInterface:
 
+    ROOM_TYPES = ('direct', 'group')
+
     @staticmethod
-    def create_room(**kwargs):
+    def create_room(**kwargs) -> int:
         room_obj = Rooms(**kwargs)
         with Session(bind=engine) as session:
             session.add(room_obj)
             session.commit()
         print(f"Created room object with params at {kwargs}")
+        return room_obj.Id
 
     @staticmethod
     def get_room_by_id(room_id: int) -> Rooms:
