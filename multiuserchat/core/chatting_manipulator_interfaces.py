@@ -1,7 +1,10 @@
+from sqlalchemy.orm import Session
+
 from multiuserchat.core.db_iteractions import *
+from multiuserchat.db_models import engine
 
 
-class SystemActionInitiator: # TODO run this class method when DB is initiated
+class SystemActionInitiator:  # TODO run this class method when DB is initiated
 
     @staticmethod
     def create_system_user():
@@ -47,6 +50,11 @@ class SystemMessageCreator:
         msg = f"{user.first_name}, {user.last_name} has left the chat"
         return msg
 
+    @staticmethod
+    def message_unsent_problem() -> str:
+        msg = "Failed with sending message"
+        return msg
+
 
 class SystemMessageActions:
 
@@ -56,20 +64,32 @@ class SystemMessageActions:
 
 class ChatStreams:
 
+    ENGINE = engine
+
     def __init__(self, user_id):
         self.user_id = user_id
 
-    def create_direct_chat(self, member_id): # TODO change session usage type
-        room_id = RoomsInterface.create_room(
+    def create_direct_chat(self, member_id):
+        room = RoomsInterface.create_room(
             type_name=RoomsInterface.ROOM_TYPES, name=None, pinned_message_id=None
         )
-        room = RoomsInterface.get_room_by_id(room_id=room_id)
         user = UserInteractions.get_user_by_id(member_id)
         room.users.add(user)
+        self.__class__.session_addition(room)
 
     def create_group_chat(self, *members_id):
-        # TODO add system user to the chat as well
-        pass
+        room = RoomsInterface.create_room(
+            type_name=RoomsInterface.ROOM_TYPES, name=None, pinned_message_id=None
+        )
+        user = UserInteractions.get_users_by_id(members_id)
+        room.users.add_all(user)
+        self.__class__.session_addition(room)
+
+    @classmethod
+    def session_addition(cls, obj):
+        with Session(bind=cls.ENGINE) as session:
+            session.add(obj)
+            session.commit()
 
 
 class ENDtoENDConnector:
