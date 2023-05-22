@@ -1,0 +1,9 @@
+SIMPLIFY LOW LEVEL INTERFACES FOR EASY DEVELOPMENT USAGE
+the first user should be the system, to send messages : User related
+if user was deleted, his records shouldn't be deleted : User related
+create pydentic field checker objects for corresponding DB model to reduce mistake probability
+think about id generators for advance filter usage, after their development, use them in entity's
+when the current day changes, all active conversations should be closed and new ones opened, if
+when forwarded message renders to a specific conversation, then load conversation
+IMPORTANT ! Investigate and create room access options table, like permission to delete, edit message
+Change where filter is done with id column, replace with query.get() method

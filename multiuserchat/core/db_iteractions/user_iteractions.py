@@ -89,6 +89,12 @@ class UserCRUD:
             session.commit()
             print(f"Successfully deleted User with params {user_obj}")
 
+    @staticmethod
+    def get_users_by_id(*id_list):
+        with Session(bind=engine) as session:
+            user_objects = session.query(Users).filter(Users.id.in_(id_list)).all()
+            return user_objects
+
 
 class UserInteractions(UserCRUD):
 
